@@ -1,0 +1,686 @@
+  [1m[35m (65.2ms)[0m  [1m[35mCREATE DATABASE "mywebsite_development" ENCODING = 'unicode'[0m
+  [1m[35m (30.2ms)[0m  [1m[35mCREATE DATABASE "mywebsite_test" ENCODING = 'unicode'[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT pg_try_advisory_lock(8159800790155483245)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (5.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (3.7ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (1.7ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2024-11-07 19:30:43.160760', '2024-11-07 19:30:43.161162') RETURNING "key"[0m
+Migrating to CreateSpinaTables (20241107193041)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.4ms)[0m  [1m[35mDROP TABLE IF EXISTS "spina_accounts" CASCADE[0m
+  [1m[35m (40.7ms)[0m  [1m[35mCREATE TABLE "spina_accounts" ("id" serial NOT NULL PRIMARY KEY, "name" character varying, "address" character varying, "postal_code" character varying, "city" character varying, "phone" character varying, "email" character varying, "preferences" text, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "robots_allowed" boolean DEFAULT FALSE)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "spina_attachment_collections" CASCADE[0m
+  [1m[35m (2.5ms)[0m  [1m[35mCREATE TABLE "spina_attachment_collections" ("id" serial NOT NULL PRIMARY KEY, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "spina_attachment_collections_attachments" CASCADE[0m
+  [1m[35m (2.7ms)[0m  [1m[35mCREATE TABLE "spina_attachment_collections_attachments" ("id" serial NOT NULL PRIMARY KEY, "attachment_collection_id" integer, "attachment_id" integer)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "spina_attachments" CASCADE[0m
+  [1m[35m (4.8ms)[0m  [1m[35mCREATE TABLE "spina_attachments" ("id" serial NOT NULL PRIMARY KEY, "file" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "spina_layout_parts" CASCADE[0m
+  [1m[35m (7.2ms)[0m  [1m[35mCREATE TABLE "spina_layout_parts" ("id" serial NOT NULL PRIMARY KEY, "title" character varying, "name" character varying, "layout_partable_id" integer, "layout_partable_type" character varying, "created_at" timestamp, "updated_at" timestamp, "account_id" integer)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "spina_lines" CASCADE[0m
+  [1m[35m (11.2ms)[0m  [1m[35mCREATE TABLE "spina_lines" ("id" serial NOT NULL PRIMARY KEY, "content" character varying, "created_at" timestamp, "updated_at" timestamp)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "spina_page_parts" CASCADE[0m
+  [1m[35m (4.6ms)[0m  [1m[35mCREATE TABLE "spina_page_parts" ("id" serial NOT NULL PRIMARY KEY, "title" character varying, "name" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "page_id" integer, "page_partable_id" integer, "page_partable_type" character varying)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "spina_pages" CASCADE[0m
+  [1m[35m (8.0ms)[0m  [1m[35mCREATE TABLE "spina_pages" ("id" serial NOT NULL PRIMARY KEY, "title" character varying, "menu_title" character varying, "description" character varying, "show_in_menu" boolean DEFAULT TRUE, "slug" character varying, "deletable" boolean DEFAULT TRUE, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "name" character varying, "seo_title" character varying, "skip_to_first_child" boolean DEFAULT FALSE, "view_template" character varying, "layout_template" character varying, "draft" boolean DEFAULT FALSE, "link_url" character varying, "ancestry" character varying, "position" integer, "materialized_path" character varying, "active" boolean DEFAULT TRUE)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "spina_structure_items" CASCADE[0m
+  [1m[35m (3.1ms)[0m  [1m[35mCREATE TABLE "spina_structure_items" ("id" serial NOT NULL PRIMARY KEY, "structure_id" integer, "position" integer, "created_at" timestamp, "updated_at" timestamp)[0m
+  [1m[35m (1.3ms)[0m  [1m[35mCREATE INDEX "index_spina_structure_items_on_structure_id" ON "spina_structure_items" USING btree ("structure_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "spina_structure_parts" CASCADE[0m
+  [1m[35m (5.5ms)[0m  [1m[35mCREATE TABLE "spina_structure_parts" ("id" serial NOT NULL PRIMARY KEY, "structure_item_id" integer, "structure_partable_id" integer, "structure_partable_type" character varying, "name" character varying, "title" character varying, "created_at" timestamp, "updated_at" timestamp)[0m
+  [1m[35m (1.1ms)[0m  [1m[35mCREATE INDEX "index_spina_structure_parts_on_structure_item_id" ON "spina_structure_parts" USING btree ("structure_item_id")[0m
+  [1m[35m (1.3ms)[0m  [1m[35mCREATE INDEX "index_spina_structure_parts_on_structure_partable_id" ON "spina_structure_parts" USING btree ("structure_partable_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "spina_structures" CASCADE[0m
+  [1m[35m (10.1ms)[0m  [1m[35mCREATE TABLE "spina_structures" ("id" serial NOT NULL PRIMARY KEY, "created_at" timestamp, "updated_at" timestamp)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "spina_texts" CASCADE[0m
+  [1m[35m (7.9ms)[0m  [1m[35mCREATE TABLE "spina_texts" ("id" serial NOT NULL PRIMARY KEY, "content" text, "created_at" timestamp, "updated_at" timestamp)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "spina_users" CASCADE[0m
+  [1m[35m (7.3ms)[0m  [1m[35mCREATE TABLE "spina_users" ("id" serial NOT NULL PRIMARY KEY, "name" character varying, "email" character varying, "password_digest" character varying, "admin" boolean DEFAULT FALSE, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, "last_logged_in" timestamp)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "spina_rewrite_rules" CASCADE[0m
+  [1m[35m (11.3ms)[0m  [1m[35mCREATE TABLE "spina_rewrite_rules" ("id" serial NOT NULL PRIMARY KEY, "old_path" character varying, "new_path" character varying, "created_at" timestamp, "updated_at" timestamp)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.5ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241107193041') RETURNING "version"[0m
+  [1m[36mTRANSACTION (2.4ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateSpinaTranslationTables (20241107193042)
+  [1m[36mTRANSACTION (1.9ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (2.3ms)[0m  [1m[35mDROP TABLE IF EXISTS "spina_page_translations" CASCADE[0m
+  [1m[35m (7.0ms)[0m  [1m[35mCREATE TABLE "spina_page_translations" ("id" serial NOT NULL PRIMARY KEY, "spina_page_id" integer NOT NULL, "locale" character varying NOT NULL, "title" character varying, "menu_title" character varying, "description" character varying, "seo_title" character varying, "materialized_path" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (3.0ms)[0m  [1m[35mCREATE INDEX "index_spina_page_translations_on_locale" ON "spina_page_translations" ("locale")[0m
+  [1m[35m (2.6ms)[0m  [1m[35mCREATE INDEX "index_spina_page_translations_on_spina_page_id" ON "spina_page_translations" ("spina_page_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "spina_line_translations" CASCADE[0m
+  [1m[35m (5.8ms)[0m  [1m[35mCREATE TABLE "spina_line_translations" ("id" serial NOT NULL PRIMARY KEY, "spina_line_id" integer NOT NULL, "locale" character varying NOT NULL, "content" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (7.0ms)[0m  [1m[35mCREATE INDEX "index_spina_line_translations_on_locale" ON "spina_line_translations" ("locale")[0m
+  [1m[35m (3.1ms)[0m  [1m[35mCREATE INDEX "index_spina_line_translations_on_spina_line_id" ON "spina_line_translations" ("spina_line_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "spina_text_translations" CASCADE[0m
+  [1m[35m (12.0ms)[0m  [1m[35mCREATE TABLE "spina_text_translations" ("id" serial NOT NULL PRIMARY KEY, "spina_text_id" integer NOT NULL, "locale" character varying NOT NULL, "content" text, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE INDEX "index_spina_text_translations_on_locale" ON "spina_text_translations" ("locale")[0m
+  [1m[35m (1.1ms)[0m  [1m[35mCREATE INDEX "index_spina_text_translations_on_spina_text_id" ON "spina_text_translations" ("spina_text_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241107193042') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateSpinaNavigations (20241107193043)
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.3ms)[0m  [1m[35mDROP TABLE IF EXISTS "spina_navigations" CASCADE[0m
+  [1m[35m (6.8ms)[0m  [1m[35mCREATE TABLE "spina_navigations" ("id" serial NOT NULL PRIMARY KEY, "name" character varying NOT NULL, "label" character varying NOT NULL, "auto_add_pages" boolean DEFAULT FALSE NOT NULL, "position" integer DEFAULT 0 NOT NULL, "created_at" timestamp, "updated_at" timestamp)[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_spina_navigations_on_name" ON "spina_navigations" USING btree ("name")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "spina_navigation_items" CASCADE[0m
+  [1m[35m (4.5ms)[0m  [1m[35mCREATE TABLE "spina_navigation_items" ("id" serial NOT NULL PRIMARY KEY, "page_id" integer NOT NULL, "navigation_id" integer NOT NULL, "position" integer DEFAULT 0 NOT NULL, "ancestry" character varying, "created_at" timestamp, "updated_at" timestamp)[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_spina_navigation_items_on_page_id_and_navigation_id" ON "spina_navigation_items" USING btree ("page_id", "navigation_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241107193043') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT[0m
+Migrating to AddPasswordResetTokenToSpinaUsers (20241107193044)
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.2ms)[0m  [1m[35mALTER TABLE "spina_users" ADD "password_reset_token" character varying[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "spina_users" ADD "password_reset_sent_at" timestamp[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241107193044') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+Migrating to RemoveTranslatedColumns (20241107193045)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (2.8ms)[0m  [1m[35mALTER TABLE "spina_lines" DROP COLUMN "content"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mALTER TABLE "spina_texts" DROP COLUMN "content"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "spina_pages" DROP COLUMN "title"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "spina_pages" DROP COLUMN "menu_title"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "spina_pages" DROP COLUMN "description"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "spina_pages" DROP COLUMN "seo_title"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mALTER TABLE "spina_pages" DROP COLUMN "materialized_path"[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241107193045') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateSpinaOptions (20241107193046)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (19.9ms)[0m  [1m[35mCREATE TABLE "spina_options" ("id" serial NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241107193046') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateSpinaSettings (20241107193047)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (4.7ms)[0m  [1m[35mCREATE TABLE "spina_settings" ("id" serial NOT NULL PRIMARY KEY, "plugin" character varying, "preferences" jsonb DEFAULT '{}', "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (1.1ms)[0m  [1m[35mCREATE INDEX "index_spina_settings_on_plugin" ON "spina_settings" ("plugin")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241107193047') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateSpinaMediaFolders (20241107193048)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (94.8ms)[0m  [1m[35mCREATE TABLE "spina_media_folders" ("id" bigserial primary key, "name" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241107193048') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateSpinaImages (20241107193049)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (4.7ms)[0m  [1m[35mCREATE TABLE "spina_images" ("id" bigserial primary key, "media_folder_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (1.5ms)[0m  [1m[35mCREATE INDEX "index_spina_images_on_media_folder_id" ON "spina_images" ("media_folder_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241107193049') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateSpinaImageCollections (20241107193050)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (3.4ms)[0m  [1m[35mCREATE TABLE "spina_image_collections" ("id" bigserial primary key, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "spina_image_collections_images" CASCADE[0m
+  [1m[35m (2.3ms)[0m  [1m[35mCREATE TABLE "spina_image_collections_images" ("id" serial NOT NULL PRIMARY KEY, "image_collection_id" integer, "image_id" integer, "position" integer)[0m
+  [1m[35m (1.1ms)[0m  [1m[35mCREATE INDEX "index_spina_image_collections_images_on_image_collection_id" ON "spina_image_collections_images" ("image_collection_id")[0m
+  [1m[35m (1.3ms)[0m  [1m[35mCREATE INDEX "index_spina_image_collections_images_on_image_id" ON "spina_image_collections_images" ("image_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241107193050') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateSpinaResources (20241107193051)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (11.2ms)[0m  [1m[35mCREATE TABLE "spina_resources" ("id" bigserial primary key, "name" character varying NOT NULL, "label" character varying, "view_template" character varying, "order_by" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "spina_pages" ADD "resource_id" integer[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE INDEX "index_spina_pages_on_resource_id" ON "spina_pages" ("resource_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241107193051') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+Migrating to AddUrlTitleToSpinaPageTranslations (20241107193052)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.0ms)[0m  [1m[35mALTER TABLE "spina_page_translations" ADD "url_title" character varying[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241107193052') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+Migrating to AddJsonAttributesToSpinaAccounts (20241107193053)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.6ms)[0m  [1m[35mALTER TABLE "spina_accounts" ADD "json_attributes" jsonb[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241107193053') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+Migrating to AddJsonAttributesToSpinaPages (20241107193054)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.6ms)[0m  [1m[35mALTER TABLE "spina_pages" ADD "json_attributes" jsonb[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241107193054') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+Migrating to AddSlugToSpinaResources (20241107193055)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.6ms)[0m  [1m[35mALTER TABLE "spina_resources" ADD "slug" jsonb[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241107193055') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT pg_advisory_unlock(8159800790155483245)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Started GET "/" for 127.0.0.1 at 2024-11-07 17:04:44 -0300
+  [1m[36mActiveRecord::SchemaMigration Load (1.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Spina::PagesController#homepage as HTML
+Completed 500 Internal Server Error in 67ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+  
+ArgumentError (missing keyword: :coder If no default coder is configured, a coder must be provided to `serialize`.):
+  
+activerecord (7.2.2) lib/active_record/attribute_methods/serialization.rb:186:in `serialize'
+spina (2.5.0) app/models/spina/account.rb:8:in `<class:Account>'
+spina (2.5.0) app/models/spina/account.rb:2:in `<module:Spina>'
+spina (2.5.0) app/models/spina/account.rb:1:in `<main>'
+<internal:/Users/cilasbeltrame/.rbenv/versions/3.2.6/lib/ruby/3.2.0/rubygems/core_ext/kernel_require.rb>:38:in `require'
+<internal:/Users/cilasbeltrame/.rbenv/versions/3.2.6/lib/ruby/3.2.0/rubygems/core_ext/kernel_require.rb>:38:in `require'
+bootsnap (1.18.4) lib/bootsnap/load_path_cache/core_ext/kernel_require.rb:30:in `require'
+zeitwerk (2.7.1) lib/zeitwerk/core_ext/kernel.rb:26:in `require'
+spina (2.5.0) app/controllers/concerns/spina/current_account.rb:13:in `current_account'
+spina (2.5.0) app/controllers/concerns/spina/current_theme.rb:13:in `current_theme'
+activesupport (7.2.2) lib/active_support/callbacks.rb:362:in `block in make_lambda'
+activesupport (7.2.2) lib/active_support/callbacks.rb:179:in `block in call'
+actionpack (7.2.2) lib/abstract_controller/callbacks.rb:34:in `block (2 levels) in <module:Callbacks>'
+activesupport (7.2.2) lib/active_support/callbacks.rb:180:in `call'
+activesupport (7.2.2) lib/active_support/callbacks.rb:559:in `block in invoke_before'
+activesupport (7.2.2) lib/active_support/callbacks.rb:559:in `each'
+activesupport (7.2.2) lib/active_support/callbacks.rb:559:in `invoke_before'
+activesupport (7.2.2) lib/active_support/callbacks.rb:119:in `block in run_callbacks'
+turbo-rails (2.0.11) lib/turbo-rails.rb:24:in `with_request_id'
+turbo-rails (2.0.11) app/controllers/concerns/turbo/request_id_tracking.rb:10:in `turbo_tracking_request_id'
+activesupport (7.2.2) lib/active_support/callbacks.rb:130:in `block in run_callbacks'
+actiontext (7.2.2) lib/action_text/rendering.rb:25:in `with_renderer'
+actiontext (7.2.2) lib/action_text/engine.rb:71:in `block (4 levels) in <class:Engine>'
+activesupport (7.2.2) lib/active_support/callbacks.rb:130:in `instance_exec'
+activesupport (7.2.2) lib/active_support/callbacks.rb:130:in `block in run_callbacks'
+activesupport (7.2.2) lib/active_support/callbacks.rb:141:in `run_callbacks'
+actionpack (7.2.2) lib/abstract_controller/callbacks.rb:260:in `process_action'
+actionpack (7.2.2) lib/action_controller/metal/rescue.rb:27:in `process_action'
+actionpack (7.2.2) lib/action_controller/metal/instrumentation.rb:77:in `block in process_action'
+activesupport (7.2.2) lib/active_support/notifications.rb:210:in `block in instrument'
+activesupport (7.2.2) lib/active_support/notifications/instrumenter.rb:58:in `instrument'
+activesupport (7.2.2) lib/active_support/notifications.rb:210:in `instrument'
+actionpack (7.2.2) lib/action_controller/metal/instrumentation.rb:76:in `process_action'
+actionpack (7.2.2) lib/action_controller/metal/params_wrapper.rb:259:in `process_action'
+activerecord (7.2.2) lib/active_record/railties/controller_runtime.rb:39:in `process_action'
+actionpack (7.2.2) lib/abstract_controller/base.rb:163:in `process'
+actionview (7.2.2) lib/action_view/rendering.rb:40:in `process'
+actionpack (7.2.2) lib/action_controller/metal.rb:252:in `dispatch'
+actionpack (7.2.2) lib/action_controller/metal.rb:335:in `dispatch'
+actionpack (7.2.2) lib/action_dispatch/routing/route_set.rb:67:in `dispatch'
+actionpack (7.2.2) lib/action_dispatch/routing/route_set.rb:50:in `serve'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:53:in `block in serve'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:133:in `block in find_routes'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:126:in `each'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:126:in `find_routes'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:34:in `serve'
+actionpack (7.2.2) lib/action_dispatch/routing/route_set.rb:896:in `call'
+railties (7.2.2) lib/rails/engine.rb:535:in `call'
+railties (7.2.2) lib/rails/railtie.rb:226:in `public_send'
+railties (7.2.2) lib/rails/railtie.rb:226:in `method_missing'
+actionpack (7.2.2) lib/action_dispatch/routing/mapper.rb:33:in `block in <class:Constraints>'
+actionpack (7.2.2) lib/action_dispatch/routing/mapper.rb:62:in `serve'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:53:in `block in serve'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:133:in `block in find_routes'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:126:in `each'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:126:in `find_routes'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:34:in `serve'
+actionpack (7.2.2) lib/action_dispatch/routing/route_set.rb:896:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/static.rb:27:in `call'
+rack (3.1.8) lib/rack/tempfile_reaper.rb:20:in `call'
+rack (3.1.8) lib/rack/etag.rb:29:in `call'
+rack (3.1.8) lib/rack/conditional_get.rb:31:in `call'
+rack (3.1.8) lib/rack/head.rb:15:in `call'
+actionpack (7.2.2) lib/action_dispatch/http/permissions_policy.rb:38:in `call'
+actionpack (7.2.2) lib/action_dispatch/http/content_security_policy.rb:35:in `call'
+rack-session (2.0.0) lib/rack/session/abstract/id.rb:272:in `context'
+rack-session (2.0.0) lib/rack/session/abstract/id.rb:266:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/cookies.rb:704:in `call'
+activerecord (7.2.2) lib/active_record/migration.rb:674:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/callbacks.rb:31:in `block in call'
+activesupport (7.2.2) lib/active_support/callbacks.rb:101:in `run_callbacks'
+actionpack (7.2.2) lib/action_dispatch/middleware/callbacks.rb:30:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/actionable_exceptions.rb:18:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/debug_exceptions.rb:31:in `call'
+web-console (4.2.1) lib/web_console/middleware.rb:132:in `call_app'
+web-console (4.2.1) lib/web_console/middleware.rb:28:in `block in call'
+web-console (4.2.1) lib/web_console/middleware.rb:17:in `catch'
+web-console (4.2.1) lib/web_console/middleware.rb:17:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/show_exceptions.rb:32:in `call'
+railties (7.2.2) lib/rails/rack/logger.rb:41:in `call_app'
+railties (7.2.2) lib/rails/rack/logger.rb:29:in `call'
+sprockets-rails (3.5.2) lib/sprockets/rails/quiet_assets.rb:17:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/remote_ip.rb:96:in `call'
+request_store (1.7.0) lib/request_store/middleware.rb:19:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/request_id.rb:33:in `call'
+rack (3.1.8) lib/rack/method_override.rb:28:in `call'
+rack (3.1.8) lib/rack/runtime.rb:24:in `call'
+activesupport (7.2.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/server_timing.rb:61:in `block in call'
+actionpack (7.2.2) lib/action_dispatch/middleware/server_timing.rb:26:in `collect_events'
+actionpack (7.2.2) lib/action_dispatch/middleware/server_timing.rb:60:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/static.rb:27:in `call'
+rack (3.1.8) lib/rack/sendfile.rb:114:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/host_authorization.rb:143:in `call'
+railties (7.2.2) lib/rails/engine.rb:535:in `call'
+puma (6.4.3) lib/puma/configuration.rb:272:in `call'
+puma (6.4.3) lib/puma/request.rb:100:in `block in handle_request'
+puma (6.4.3) lib/puma/thread_pool.rb:378:in `with_force_shutdown'
+puma (6.4.3) lib/puma/request.rb:99:in `handle_request'
+puma (6.4.3) lib/puma/server.rb:464:in `process_client'
+puma (6.4.3) lib/puma/server.rb:245:in `block in run'
+puma (6.4.3) lib/puma/thread_pool.rb:155:in `block in spawn_thread'
+Started GET "/" for 127.0.0.1 at 2024-11-07 17:09:01 -0300
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Spina::PagesController#homepage as HTML
+  [1m[36mSpina::Account Load (0.6ms)[0m  [1m[34mSELECT "spina_accounts".* FROM "spina_accounts" ORDER BY "spina_accounts"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]
+Completed 500 Internal Server Error in 81ms (ActiveRecord: 45.2ms (1 query, 0 cached) | GC: 1.8ms)
+
+
+  
+NoMethodError (undefined method `theme' for nil:NilClass):
+  
+spina (2.5.0) app/controllers/concerns/spina/current_theme.rb:13:in `current_theme'
+activesupport (7.2.2) lib/active_support/callbacks.rb:362:in `block in make_lambda'
+activesupport (7.2.2) lib/active_support/callbacks.rb:179:in `block in call'
+actionpack (7.2.2) lib/abstract_controller/callbacks.rb:34:in `block (2 levels) in <module:Callbacks>'
+activesupport (7.2.2) lib/active_support/callbacks.rb:180:in `call'
+activesupport (7.2.2) lib/active_support/callbacks.rb:559:in `block in invoke_before'
+activesupport (7.2.2) lib/active_support/callbacks.rb:559:in `each'
+activesupport (7.2.2) lib/active_support/callbacks.rb:559:in `invoke_before'
+activesupport (7.2.2) lib/active_support/callbacks.rb:119:in `block in run_callbacks'
+turbo-rails (2.0.11) lib/turbo-rails.rb:24:in `with_request_id'
+turbo-rails (2.0.11) app/controllers/concerns/turbo/request_id_tracking.rb:10:in `turbo_tracking_request_id'
+activesupport (7.2.2) lib/active_support/callbacks.rb:130:in `block in run_callbacks'
+actiontext (7.2.2) lib/action_text/rendering.rb:25:in `with_renderer'
+actiontext (7.2.2) lib/action_text/engine.rb:71:in `block (4 levels) in <class:Engine>'
+activesupport (7.2.2) lib/active_support/callbacks.rb:130:in `instance_exec'
+activesupport (7.2.2) lib/active_support/callbacks.rb:130:in `block in run_callbacks'
+activesupport (7.2.2) lib/active_support/callbacks.rb:141:in `run_callbacks'
+actionpack (7.2.2) lib/abstract_controller/callbacks.rb:260:in `process_action'
+actionpack (7.2.2) lib/action_controller/metal/rescue.rb:27:in `process_action'
+actionpack (7.2.2) lib/action_controller/metal/instrumentation.rb:77:in `block in process_action'
+activesupport (7.2.2) lib/active_support/notifications.rb:210:in `block in instrument'
+activesupport (7.2.2) lib/active_support/notifications/instrumenter.rb:58:in `instrument'
+activesupport (7.2.2) lib/active_support/notifications.rb:210:in `instrument'
+actionpack (7.2.2) lib/action_controller/metal/instrumentation.rb:76:in `process_action'
+actionpack (7.2.2) lib/action_controller/metal/params_wrapper.rb:259:in `process_action'
+activerecord (7.2.2) lib/active_record/railties/controller_runtime.rb:39:in `process_action'
+actionpack (7.2.2) lib/abstract_controller/base.rb:163:in `process'
+actionview (7.2.2) lib/action_view/rendering.rb:40:in `process'
+actionpack (7.2.2) lib/action_controller/metal.rb:252:in `dispatch'
+actionpack (7.2.2) lib/action_controller/metal.rb:335:in `dispatch'
+actionpack (7.2.2) lib/action_dispatch/routing/route_set.rb:67:in `dispatch'
+actionpack (7.2.2) lib/action_dispatch/routing/route_set.rb:50:in `serve'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:53:in `block in serve'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:133:in `block in find_routes'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:126:in `each'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:126:in `find_routes'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:34:in `serve'
+actionpack (7.2.2) lib/action_dispatch/routing/route_set.rb:896:in `call'
+railties (7.2.2) lib/rails/engine.rb:535:in `call'
+railties (7.2.2) lib/rails/railtie.rb:226:in `public_send'
+railties (7.2.2) lib/rails/railtie.rb:226:in `method_missing'
+actionpack (7.2.2) lib/action_dispatch/routing/mapper.rb:33:in `block in <class:Constraints>'
+actionpack (7.2.2) lib/action_dispatch/routing/mapper.rb:62:in `serve'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:53:in `block in serve'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:133:in `block in find_routes'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:126:in `each'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:126:in `find_routes'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:34:in `serve'
+actionpack (7.2.2) lib/action_dispatch/routing/route_set.rb:896:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/static.rb:27:in `call'
+rack (3.1.8) lib/rack/tempfile_reaper.rb:20:in `call'
+rack (3.1.8) lib/rack/etag.rb:29:in `call'
+rack (3.1.8) lib/rack/conditional_get.rb:31:in `call'
+rack (3.1.8) lib/rack/head.rb:15:in `call'
+actionpack (7.2.2) lib/action_dispatch/http/permissions_policy.rb:38:in `call'
+actionpack (7.2.2) lib/action_dispatch/http/content_security_policy.rb:35:in `call'
+rack-session (2.0.0) lib/rack/session/abstract/id.rb:272:in `context'
+rack-session (2.0.0) lib/rack/session/abstract/id.rb:266:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/cookies.rb:704:in `call'
+activerecord (7.2.2) lib/active_record/migration.rb:674:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/callbacks.rb:31:in `block in call'
+activesupport (7.2.2) lib/active_support/callbacks.rb:101:in `run_callbacks'
+actionpack (7.2.2) lib/action_dispatch/middleware/callbacks.rb:30:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/actionable_exceptions.rb:18:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/debug_exceptions.rb:31:in `call'
+web-console (4.2.1) lib/web_console/middleware.rb:132:in `call_app'
+web-console (4.2.1) lib/web_console/middleware.rb:28:in `block in call'
+web-console (4.2.1) lib/web_console/middleware.rb:17:in `catch'
+web-console (4.2.1) lib/web_console/middleware.rb:17:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/show_exceptions.rb:32:in `call'
+railties (7.2.2) lib/rails/rack/logger.rb:41:in `call_app'
+railties (7.2.2) lib/rails/rack/logger.rb:29:in `call'
+sprockets-rails (3.5.2) lib/sprockets/rails/quiet_assets.rb:17:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/remote_ip.rb:96:in `call'
+request_store (1.7.0) lib/request_store/middleware.rb:19:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/request_id.rb:33:in `call'
+rack (3.1.8) lib/rack/method_override.rb:28:in `call'
+rack (3.1.8) lib/rack/runtime.rb:24:in `call'
+activesupport (7.2.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/server_timing.rb:61:in `block in call'
+actionpack (7.2.2) lib/action_dispatch/middleware/server_timing.rb:26:in `collect_events'
+actionpack (7.2.2) lib/action_dispatch/middleware/server_timing.rb:60:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/static.rb:27:in `call'
+rack (3.1.8) lib/rack/sendfile.rb:114:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/host_authorization.rb:143:in `call'
+railties (7.2.2) lib/rails/engine.rb:535:in `call'
+puma (6.4.3) lib/puma/configuration.rb:272:in `call'
+puma (6.4.3) lib/puma/request.rb:100:in `block in handle_request'
+puma (6.4.3) lib/puma/thread_pool.rb:378:in `with_force_shutdown'
+puma (6.4.3) lib/puma/request.rb:99:in `handle_request'
+puma (6.4.3) lib/puma/server.rb:464:in `process_client'
+puma (6.4.3) lib/puma/server.rb:245:in `block in run'
+puma (6.4.3) lib/puma/thread_pool.rb:155:in `block in spawn_thread'
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT pg_try_advisory_lock(8159800790155483245)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.7ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT pg_advisory_unlock(8159800790155483245)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mSpina::Account Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "spina_accounts" LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mSpina::Account Load (0.1ms)[0m  [1m[34mSELECT "spina_accounts".* FROM "spina_accounts" ORDER BY "spina_accounts"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mSpina::Account Load (0.7ms)[0m  [1m[34mSELECT "spina_accounts".* FROM "spina_accounts" ORDER BY "spina_accounts"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mSpina::Account Create (14.6ms)[0m  [1m[32mINSERT INTO "spina_accounts" ("name", "address", "postal_code", "city", "phone", "email", "preferences", "created_at", "updated_at", "robots_allowed", "json_attributes") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING "id"[0m  [["name", "MySite"], ["address", nil], ["postal_code", nil], ["city", nil], ["phone", nil], ["email", "[FILTERED]"], ["preferences", nil], ["created_at", "2024-11-07 20:09:40.876774"], ["updated_at", "2024-11-07 20:09:40.876774"], ["robots_allowed", false], ["json_attributes", "{\"en_content\":[]}"]]
+  [1m[36mTRANSACTION (3.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mSpina::Account Load (0.3ms)[0m  [1m[34mSELECT "spina_accounts".* FROM "spina_accounts" ORDER BY "spina_accounts"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mSpina::Account Update (5.2ms)[0m  [1m[33mUPDATE "spina_accounts" SET "preferences" = $1, "updated_at" = $2 WHERE "spina_accounts"."id" = $3[0m  [["preferences", "{\"theme\":\"default\"}"], ["updated_at", "2024-11-07 20:09:41.682581"], ["id", 1]]
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mSpina::Account Load (0.2ms)[0m  [1m[34mSELECT "spina_accounts".* FROM "spina_accounts" ORDER BY "spina_accounts"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mSpina::User Exists? (1.1ms)[0m  [1m[34mSELECT 1 AS one FROM "spina_users" LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mSpina::User Exists? (1.3ms)[0m  [1m[34mSELECT 1 AS one FROM "spina_users" WHERE "spina_users"."email" = $1 LIMIT $2[0m  [["email", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mSpina::User Create (1.6ms)[0m  [1m[32mINSERT INTO "spina_users" ("name", "email", "password_digest", "admin", "created_at", "updated_at", "last_logged_in", "password_reset_token", "password_reset_sent_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["name", "admin"], ["email", "[FILTERED]"], ["password_digest", "[FILTERED]"], ["admin", true], ["created_at", "2024-11-07 20:09:42.794745"], ["updated_at", "2024-11-07 20:09:42.794745"], ["last_logged_in", nil], ["password_reset_token", "[FILTERED]"], ["password_reset_sent_at", "[FILTERED]"]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mSpina::Account Load (2.5ms)[0m  [1m[34mSELECT "spina_accounts".* FROM "spina_accounts" ORDER BY "spina_accounts"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mSpina::Account Load (0.2ms)[0m  [1m[34mSELECT "spina_accounts".* FROM "spina_accounts" ORDER BY "spina_accounts"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mSpina::Account Load (0.2ms)[0m  [1m[34mSELECT "spina_accounts".* FROM "spina_accounts" ORDER BY "spina_accounts"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mSpina::User Load (0.2ms)[0m  [1m[34mSELECT "spina_users".* FROM "spina_users" ORDER BY "spina_users"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]
+Started GET "/" for 127.0.0.1 at 2024-11-07 17:09:56 -0300
+  [1m[36mActiveRecord::SchemaMigration Load (0.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Spina::PagesController#homepage as HTML
+  [1m[36mSpina::Account Load (0.7ms)[0m  [1m[34mSELECT "spina_accounts".* FROM "spina_accounts" ORDER BY "spina_accounts"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mSpina::Page Load (1.3ms)[0m  [1m[34mSELECT "spina_pages".* FROM "spina_pages" WHERE "spina_pages"."name" = $1 LIMIT $2[0m  [["name", "homepage"], ["LIMIT", 1]]
+  [1m[36mSpina::RewriteRule Load (1.7ms)[0m  [1m[34mSELECT "spina_rewrite_rules".* FROM "spina_rewrite_rules" WHERE "spina_rewrite_rules"."old_path" = $1 LIMIT $2[0m  [["old_path", "/"], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.erb
+  Rendering public/404.html within layouts/application
+  Rendered public/404.html within layouts/application (Duration: 0.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 11252.6ms | GC: 97.3ms)
+Completed 404 Not Found in 11403ms (Views: 11262.7ms | ActiveRecord: 55.1ms (3 queries, 0 cached) | GC: 99.7ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2024-11-07 17:10:07 -0300
+Processing by Spina::PagesController#show as JSON
+  Parameters: {"id"=>"manifest"}
+  [1m[36mSpina::Account Load (0.6ms)[0m  [1m[34mSELECT "spina_accounts".* FROM "spina_accounts" ORDER BY "spina_accounts"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mSpina::Page Load (2.1ms)[0m  [1m[34mSELECT "spina_pages".* FROM "spina_pages" INNER JOIN "spina_page_translations" "spina_page_translations_en" ON "spina_page_translations_en"."spina_page_id" = "spina_pages"."id" AND "spina_page_translations_en"."locale" = 'en' WHERE "spina_page_translations_en"."materialized_path" = '/manifest' LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mSpina::RewriteRule Load (0.1ms)[0m  [1m[34mSELECT "spina_rewrite_rules".* FROM "spina_rewrite_rules" WHERE "spina_rewrite_rules"."old_path" = $1 LIMIT $2[0m  [["old_path", "/manifest"], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.erb
+  Rendering public/404.html within layouts/application
+  Rendered public/404.html within layouts/application (Duration: 0.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.5ms | GC: 0.0ms)
+Completed 404 Not Found in 14ms (Views: 1.7ms | ActiveRecord: 4.5ms (3 queries, 0 cached) | GC: 0.1ms)
+
+
+Started GET "/" for 127.0.0.1 at 2024-11-07 17:11:37 -0300
+  [1m[36mActiveRecord::SchemaMigration Load (0.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Spina::PagesController#homepage as HTML
+  [1m[36mSpina::Account Load (0.4ms)[0m  [1m[34mSELECT "spina_accounts".* FROM "spina_accounts" ORDER BY "spina_accounts"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mSpina::Page Load (0.8ms)[0m  [1m[34mSELECT "spina_pages".* FROM "spina_pages" WHERE "spina_pages"."name" = $1 LIMIT $2[0m  [["name", "homepage"], ["LIMIT", 1]]
+  [1m[36mSpina::RewriteRule Load (0.6ms)[0m  [1m[34mSELECT "spina_rewrite_rules".* FROM "spina_rewrite_rules" WHERE "spina_rewrite_rules"."old_path" = $1 LIMIT $2[0m  [["old_path", "/"], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.erb
+  Rendering public/404.html within layouts/application
+  Rendered public/404.html within layouts/application (Duration: 0.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 167.7ms | GC: 7.8ms)
+Completed 404 Not Found in 303ms (Views: 175.0ms | ActiveRecord: 57.2ms (3 queries, 0 cached) | GC: 10.3ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2024-11-07 17:11:38 -0300
+Processing by Spina::PagesController#show as JSON
+  Parameters: {"id"=>"manifest"}
+  [1m[36mSpina::Account Load (0.3ms)[0m  [1m[34mSELECT "spina_accounts".* FROM "spina_accounts" ORDER BY "spina_accounts"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mSpina::Page Load (2.0ms)[0m  [1m[34mSELECT "spina_pages".* FROM "spina_pages" INNER JOIN "spina_page_translations" "spina_page_translations_en" ON "spina_page_translations_en"."spina_page_id" = "spina_pages"."id" AND "spina_page_translations_en"."locale" = 'en' WHERE "spina_page_translations_en"."materialized_path" = '/manifest' LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mSpina::RewriteRule Load (0.2ms)[0m  [1m[34mSELECT "spina_rewrite_rules".* FROM "spina_rewrite_rules" WHERE "spina_rewrite_rules"."old_path" = $1 LIMIT $2[0m  [["old_path", "/manifest"], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.erb
+  Rendering public/404.html within layouts/application
+  Rendered public/404.html within layouts/application (Duration: 0.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.6ms | GC: 0.0ms)
+Completed 404 Not Found in 13ms (Views: 1.9ms | ActiveRecord: 4.7ms (3 queries, 0 cached) | GC: 0.5ms)
+
+
+  [1m[35m (0.0ms)[0m  [1m[34mSELECT pg_try_advisory_lock(8159800790155483245)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.5ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+Migrating to CreateActiveStorageTables (20241107201207)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (9.9ms)[0m  [1m[35mCREATE TABLE "active_storage_blobs" ("id" bigserial primary key, "key" character varying NOT NULL, "filename" character varying NOT NULL, "content_type" character varying, "metadata" text, "service_name" character varying NOT NULL, "byte_size" bigint NOT NULL, "checksum" character varying, "created_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_active_storage_blobs_on_key" ON "active_storage_blobs" ("key")[0m
+  [1m[35m (10.2ms)[0m  [1m[35mCREATE TABLE "active_storage_attachments" ("id" bigserial primary key, "name" character varying NOT NULL, "record_type" character varying NOT NULL, "record_id" bigint NOT NULL, "blob_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_c3b3935057"
+FOREIGN KEY ("blob_id")
+  REFERENCES "active_storage_blobs" ("id")
+)[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE INDEX "index_active_storage_attachments_on_blob_id" ON "active_storage_attachments" ("blob_id")[0m
+  [1m[35m (0.6ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_active_storage_attachments_uniqueness" ON "active_storage_attachments" ("record_type", "record_id", "name", "blob_id")[0m
+  [1m[35m (3.5ms)[0m  [1m[35mCREATE TABLE "active_storage_variant_records" ("id" bigserial primary key, "blob_id" bigint NOT NULL, "variation_digest" character varying NOT NULL, CONSTRAINT "fk_rails_993965df05"
+FOREIGN KEY ("blob_id")
+  REFERENCES "active_storage_blobs" ("id")
+)[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_active_storage_variant_records_uniqueness" ON "active_storage_variant_records" ("blob_id", "variation_digest")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241107201207') RETURNING "version"[0m
+  [1m[36mTRANSACTION (1.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT pg_advisory_unlock(8159800790155483245)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Started GET "/" for 127.0.0.1 at 2024-11-07 17:13:47 -0300
+  [1m[36mActiveRecord::SchemaMigration Load (0.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Spina::PagesController#homepage as HTML
+Completed 500 Internal Server Error in 21ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 1.4ms)
+
+
+  
+ArgumentError (missing keyword: :coder If no default coder is configured, a coder must be provided to `serialize`.):
+  
+activerecord (7.2.2) lib/active_record/attribute_methods/serialization.rb:186:in `serialize'
+spina (2.5.0) app/models/spina/account.rb:8:in `<class:Account>'
+spina (2.5.0) app/models/spina/account.rb:2:in `<module:Spina>'
+spina (2.5.0) app/models/spina/account.rb:1:in `<main>'
+<internal:/Users/cilasbeltrame/.rbenv/versions/3.2.6/lib/ruby/3.2.0/rubygems/core_ext/kernel_require.rb>:38:in `require'
+<internal:/Users/cilasbeltrame/.rbenv/versions/3.2.6/lib/ruby/3.2.0/rubygems/core_ext/kernel_require.rb>:38:in `require'
+bootsnap (1.18.4) lib/bootsnap/load_path_cache/core_ext/kernel_require.rb:30:in `require'
+zeitwerk (2.7.1) lib/zeitwerk/core_ext/kernel.rb:26:in `require'
+spina (2.5.0) app/controllers/concerns/spina/current_account.rb:13:in `current_account'
+spina (2.5.0) app/controllers/concerns/spina/current_theme.rb:13:in `current_theme'
+activesupport (7.2.2) lib/active_support/callbacks.rb:362:in `block in make_lambda'
+activesupport (7.2.2) lib/active_support/callbacks.rb:179:in `block in call'
+actionpack (7.2.2) lib/abstract_controller/callbacks.rb:34:in `block (2 levels) in <module:Callbacks>'
+activesupport (7.2.2) lib/active_support/callbacks.rb:180:in `call'
+activesupport (7.2.2) lib/active_support/callbacks.rb:559:in `block in invoke_before'
+activesupport (7.2.2) lib/active_support/callbacks.rb:559:in `each'
+activesupport (7.2.2) lib/active_support/callbacks.rb:559:in `invoke_before'
+activesupport (7.2.2) lib/active_support/callbacks.rb:119:in `block in run_callbacks'
+turbo-rails (2.0.11) lib/turbo-rails.rb:24:in `with_request_id'
+turbo-rails (2.0.11) app/controllers/concerns/turbo/request_id_tracking.rb:10:in `turbo_tracking_request_id'
+activesupport (7.2.2) lib/active_support/callbacks.rb:130:in `block in run_callbacks'
+actiontext (7.2.2) lib/action_text/rendering.rb:25:in `with_renderer'
+actiontext (7.2.2) lib/action_text/engine.rb:71:in `block (4 levels) in <class:Engine>'
+activesupport (7.2.2) lib/active_support/callbacks.rb:130:in `instance_exec'
+activesupport (7.2.2) lib/active_support/callbacks.rb:130:in `block in run_callbacks'
+activesupport (7.2.2) lib/active_support/callbacks.rb:141:in `run_callbacks'
+actionpack (7.2.2) lib/abstract_controller/callbacks.rb:260:in `process_action'
+actionpack (7.2.2) lib/action_controller/metal/rescue.rb:27:in `process_action'
+actionpack (7.2.2) lib/action_controller/metal/instrumentation.rb:77:in `block in process_action'
+activesupport (7.2.2) lib/active_support/notifications.rb:210:in `block in instrument'
+activesupport (7.2.2) lib/active_support/notifications/instrumenter.rb:58:in `instrument'
+activesupport (7.2.2) lib/active_support/notifications.rb:210:in `instrument'
+actionpack (7.2.2) lib/action_controller/metal/instrumentation.rb:76:in `process_action'
+actionpack (7.2.2) lib/action_controller/metal/params_wrapper.rb:259:in `process_action'
+activerecord (7.2.2) lib/active_record/railties/controller_runtime.rb:39:in `process_action'
+actionpack (7.2.2) lib/abstract_controller/base.rb:163:in `process'
+actionview (7.2.2) lib/action_view/rendering.rb:40:in `process'
+actionpack (7.2.2) lib/action_controller/metal.rb:252:in `dispatch'
+actionpack (7.2.2) lib/action_controller/metal.rb:335:in `dispatch'
+actionpack (7.2.2) lib/action_dispatch/routing/route_set.rb:67:in `dispatch'
+actionpack (7.2.2) lib/action_dispatch/routing/route_set.rb:50:in `serve'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:53:in `block in serve'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:133:in `block in find_routes'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:126:in `each'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:126:in `find_routes'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:34:in `serve'
+actionpack (7.2.2) lib/action_dispatch/routing/route_set.rb:896:in `call'
+railties (7.2.2) lib/rails/engine.rb:535:in `call'
+railties (7.2.2) lib/rails/railtie.rb:226:in `public_send'
+railties (7.2.2) lib/rails/railtie.rb:226:in `method_missing'
+actionpack (7.2.2) lib/action_dispatch/routing/mapper.rb:33:in `block in <class:Constraints>'
+actionpack (7.2.2) lib/action_dispatch/routing/mapper.rb:62:in `serve'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:53:in `block in serve'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:133:in `block in find_routes'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:126:in `each'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:126:in `find_routes'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:34:in `serve'
+actionpack (7.2.2) lib/action_dispatch/routing/route_set.rb:896:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/static.rb:27:in `call'
+rack (3.1.8) lib/rack/tempfile_reaper.rb:20:in `call'
+rack (3.1.8) lib/rack/etag.rb:29:in `call'
+rack (3.1.8) lib/rack/conditional_get.rb:31:in `call'
+rack (3.1.8) lib/rack/head.rb:15:in `call'
+actionpack (7.2.2) lib/action_dispatch/http/permissions_policy.rb:38:in `call'
+actionpack (7.2.2) lib/action_dispatch/http/content_security_policy.rb:35:in `call'
+rack-session (2.0.0) lib/rack/session/abstract/id.rb:272:in `context'
+rack-session (2.0.0) lib/rack/session/abstract/id.rb:266:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/cookies.rb:704:in `call'
+activerecord (7.2.2) lib/active_record/migration.rb:674:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/callbacks.rb:31:in `block in call'
+activesupport (7.2.2) lib/active_support/callbacks.rb:101:in `run_callbacks'
+actionpack (7.2.2) lib/action_dispatch/middleware/callbacks.rb:30:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/actionable_exceptions.rb:18:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/debug_exceptions.rb:31:in `call'
+web-console (4.2.1) lib/web_console/middleware.rb:132:in `call_app'
+web-console (4.2.1) lib/web_console/middleware.rb:28:in `block in call'
+web-console (4.2.1) lib/web_console/middleware.rb:17:in `catch'
+web-console (4.2.1) lib/web_console/middleware.rb:17:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/show_exceptions.rb:32:in `call'
+railties (7.2.2) lib/rails/rack/logger.rb:41:in `call_app'
+railties (7.2.2) lib/rails/rack/logger.rb:29:in `call'
+sprockets-rails (3.5.2) lib/sprockets/rails/quiet_assets.rb:17:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/remote_ip.rb:96:in `call'
+request_store (1.7.0) lib/request_store/middleware.rb:19:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/request_id.rb:33:in `call'
+rack (3.1.8) lib/rack/method_override.rb:28:in `call'
+rack (3.1.8) lib/rack/runtime.rb:24:in `call'
+activesupport (7.2.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/server_timing.rb:61:in `block in call'
+actionpack (7.2.2) lib/action_dispatch/middleware/server_timing.rb:26:in `collect_events'
+actionpack (7.2.2) lib/action_dispatch/middleware/server_timing.rb:60:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/static.rb:27:in `call'
+rack (3.1.8) lib/rack/sendfile.rb:114:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/host_authorization.rb:143:in `call'
+railties (7.2.2) lib/rails/engine.rb:535:in `call'
+puma (6.4.3) lib/puma/configuration.rb:272:in `call'
+puma (6.4.3) lib/puma/request.rb:100:in `block in handle_request'
+puma (6.4.3) lib/puma/thread_pool.rb:378:in `with_force_shutdown'
+puma (6.4.3) lib/puma/request.rb:99:in `handle_request'
+puma (6.4.3) lib/puma/server.rb:464:in `process_client'
+puma (6.4.3) lib/puma/server.rb:245:in `block in run'
+puma (6.4.3) lib/puma/thread_pool.rb:155:in `block in spawn_thread'
+Started GET "/" for 127.0.0.1 at 2024-11-07 17:13:51 -0300
+Processing by Spina::PagesController#homepage as HTML
+Completed 500 Internal Server Error in 1ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+  
+ArgumentError (missing keyword: :coder If no default coder is configured, a coder must be provided to `serialize`.):
+  
+activerecord (7.2.2) lib/active_record/attribute_methods/serialization.rb:186:in `serialize'
+spina (2.5.0) app/models/spina/account.rb:8:in `<class:Account>'
+spina (2.5.0) app/models/spina/account.rb:2:in `<module:Spina>'
+spina (2.5.0) app/models/spina/account.rb:1:in `<main>'
+<internal:/Users/cilasbeltrame/.rbenv/versions/3.2.6/lib/ruby/3.2.0/rubygems/core_ext/kernel_require.rb>:38:in `require'
+<internal:/Users/cilasbeltrame/.rbenv/versions/3.2.6/lib/ruby/3.2.0/rubygems/core_ext/kernel_require.rb>:38:in `require'
+bootsnap (1.18.4) lib/bootsnap/load_path_cache/core_ext/kernel_require.rb:30:in `require'
+zeitwerk (2.7.1) lib/zeitwerk/core_ext/kernel.rb:26:in `require'
+spina (2.5.0) app/controllers/concerns/spina/current_account.rb:13:in `current_account'
+spina (2.5.0) app/controllers/concerns/spina/current_theme.rb:13:in `current_theme'
+activesupport (7.2.2) lib/active_support/callbacks.rb:362:in `block in make_lambda'
+activesupport (7.2.2) lib/active_support/callbacks.rb:179:in `block in call'
+actionpack (7.2.2) lib/abstract_controller/callbacks.rb:34:in `block (2 levels) in <module:Callbacks>'
+activesupport (7.2.2) lib/active_support/callbacks.rb:180:in `call'
+activesupport (7.2.2) lib/active_support/callbacks.rb:559:in `block in invoke_before'
+activesupport (7.2.2) lib/active_support/callbacks.rb:559:in `each'
+activesupport (7.2.2) lib/active_support/callbacks.rb:559:in `invoke_before'
+activesupport (7.2.2) lib/active_support/callbacks.rb:119:in `block in run_callbacks'
+turbo-rails (2.0.11) lib/turbo-rails.rb:24:in `with_request_id'
+turbo-rails (2.0.11) app/controllers/concerns/turbo/request_id_tracking.rb:10:in `turbo_tracking_request_id'
+activesupport (7.2.2) lib/active_support/callbacks.rb:130:in `block in run_callbacks'
+actiontext (7.2.2) lib/action_text/rendering.rb:25:in `with_renderer'
+actiontext (7.2.2) lib/action_text/engine.rb:71:in `block (4 levels) in <class:Engine>'
+activesupport (7.2.2) lib/active_support/callbacks.rb:130:in `instance_exec'
+activesupport (7.2.2) lib/active_support/callbacks.rb:130:in `block in run_callbacks'
+activesupport (7.2.2) lib/active_support/callbacks.rb:141:in `run_callbacks'
+actionpack (7.2.2) lib/abstract_controller/callbacks.rb:260:in `process_action'
+actionpack (7.2.2) lib/action_controller/metal/rescue.rb:27:in `process_action'
+actionpack (7.2.2) lib/action_controller/metal/instrumentation.rb:77:in `block in process_action'
+activesupport (7.2.2) lib/active_support/notifications.rb:210:in `block in instrument'
+activesupport (7.2.2) lib/active_support/notifications/instrumenter.rb:58:in `instrument'
+activesupport (7.2.2) lib/active_support/notifications.rb:210:in `instrument'
+actionpack (7.2.2) lib/action_controller/metal/instrumentation.rb:76:in `process_action'
+actionpack (7.2.2) lib/action_controller/metal/params_wrapper.rb:259:in `process_action'
+activerecord (7.2.2) lib/active_record/railties/controller_runtime.rb:39:in `process_action'
+actionpack (7.2.2) lib/abstract_controller/base.rb:163:in `process'
+actionview (7.2.2) lib/action_view/rendering.rb:40:in `process'
+actionpack (7.2.2) lib/action_controller/metal.rb:252:in `dispatch'
+actionpack (7.2.2) lib/action_controller/metal.rb:335:in `dispatch'
+actionpack (7.2.2) lib/action_dispatch/routing/route_set.rb:67:in `dispatch'
+actionpack (7.2.2) lib/action_dispatch/routing/route_set.rb:50:in `serve'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:53:in `block in serve'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:133:in `block in find_routes'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:126:in `each'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:126:in `find_routes'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:34:in `serve'
+actionpack (7.2.2) lib/action_dispatch/routing/route_set.rb:896:in `call'
+railties (7.2.2) lib/rails/engine.rb:535:in `call'
+railties (7.2.2) lib/rails/railtie.rb:226:in `public_send'
+railties (7.2.2) lib/rails/railtie.rb:226:in `method_missing'
+actionpack (7.2.2) lib/action_dispatch/routing/mapper.rb:33:in `block in <class:Constraints>'
+actionpack (7.2.2) lib/action_dispatch/routing/mapper.rb:62:in `serve'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:53:in `block in serve'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:133:in `block in find_routes'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:126:in `each'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:126:in `find_routes'
+actionpack (7.2.2) lib/action_dispatch/journey/router.rb:34:in `serve'
+actionpack (7.2.2) lib/action_dispatch/routing/route_set.rb:896:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/static.rb:27:in `call'
+rack (3.1.8) lib/rack/tempfile_reaper.rb:20:in `call'
+rack (3.1.8) lib/rack/etag.rb:29:in `call'
+rack (3.1.8) lib/rack/conditional_get.rb:31:in `call'
+rack (3.1.8) lib/rack/head.rb:15:in `call'
+actionpack (7.2.2) lib/action_dispatch/http/permissions_policy.rb:38:in `call'
+actionpack (7.2.2) lib/action_dispatch/http/content_security_policy.rb:35:in `call'
+rack-session (2.0.0) lib/rack/session/abstract/id.rb:272:in `context'
+rack-session (2.0.0) lib/rack/session/abstract/id.rb:266:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/cookies.rb:704:in `call'
+activerecord (7.2.2) lib/active_record/migration.rb:674:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/callbacks.rb:31:in `block in call'
+activesupport (7.2.2) lib/active_support/callbacks.rb:101:in `run_callbacks'
+actionpack (7.2.2) lib/action_dispatch/middleware/callbacks.rb:30:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/actionable_exceptions.rb:18:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/debug_exceptions.rb:31:in `call'
+web-console (4.2.1) lib/web_console/middleware.rb:132:in `call_app'
+web-console (4.2.1) lib/web_console/middleware.rb:28:in `block in call'
+web-console (4.2.1) lib/web_console/middleware.rb:17:in `catch'
+web-console (4.2.1) lib/web_console/middleware.rb:17:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/show_exceptions.rb:32:in `call'
+railties (7.2.2) lib/rails/rack/logger.rb:41:in `call_app'
+railties (7.2.2) lib/rails/rack/logger.rb:29:in `call'
+sprockets-rails (3.5.2) lib/sprockets/rails/quiet_assets.rb:17:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/remote_ip.rb:96:in `call'
+request_store (1.7.0) lib/request_store/middleware.rb:19:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/request_id.rb:33:in `call'
+rack (3.1.8) lib/rack/method_override.rb:28:in `call'
+rack (3.1.8) lib/rack/runtime.rb:24:in `call'
+activesupport (7.2.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/server_timing.rb:61:in `block in call'
+actionpack (7.2.2) lib/action_dispatch/middleware/server_timing.rb:26:in `collect_events'
+actionpack (7.2.2) lib/action_dispatch/middleware/server_timing.rb:60:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/static.rb:27:in `call'
+rack (3.1.8) lib/rack/sendfile.rb:114:in `call'
+actionpack (7.2.2) lib/action_dispatch/middleware/host_authorization.rb:143:in `call'
+railties (7.2.2) lib/rails/engine.rb:535:in `call'
+puma (6.4.3) lib/puma/configuration.rb:272:in `call'
+puma (6.4.3) lib/puma/request.rb:100:in `block in handle_request'
+puma (6.4.3) lib/puma/thread_pool.rb:378:in `with_force_shutdown'
+puma (6.4.3) lib/puma/request.rb:99:in `handle_request'
+puma (6.4.3) lib/puma/server.rb:464:in `process_client'
+puma (6.4.3) lib/puma/server.rb:245:in `block in run'
+puma (6.4.3) lib/puma/thread_pool.rb:155:in `block in spawn_thread'
